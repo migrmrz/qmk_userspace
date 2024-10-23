@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_MINS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_ESC, MT(MOD_LSFT, KC_A), HR_LCTL, HR_LALT, HR_LGUI, KC_G, KC_H, HR_RGUI, HR_RALT, HR_RCTL, HR_RSFT, KC_QUOT,
+       KC_ESC, HR_LSFT, HR_LCTL, HR_LALT, HR_LGUI,    KC_G,       KC_H, HR_RGUI, HR_RALT, HR_RCTL, HR_RSFT, KC_QUOT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_EQL,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH,  KC_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
@@ -121,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_TWO] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       XXXXXXX, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),    KC_PMNS,   KC_P7,   KC_P8,   KC_P9, KC_PSLS, XXXXXXX,
+       LCK_SCR, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),    KC_PMNS,   KC_P7,   KC_P8,   KC_P9, KC_PSLS, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_CAPS, S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0),    KC_PPLS,   KC_P4,   KC_P5,   KC_P6, KC_PAST, KC_BSPC,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
