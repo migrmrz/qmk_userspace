@@ -41,7 +41,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
                 break;
             case LCK_SCR:
-                SEND_STRING(SS_LGUI(SS_LCTL("Q")));
+                SEND_STRING(SS_LGUI(SS_LCTL("q")));
                 return false;
                 break;
             case ZOOMIN:
