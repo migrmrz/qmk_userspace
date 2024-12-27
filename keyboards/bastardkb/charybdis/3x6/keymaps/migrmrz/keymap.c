@@ -80,13 +80,13 @@ static uint16_t auto_pointer_layer_timer = 0;
 // layers definition
 #define BASE TG(LAYER_BASE)   // qwerty english
 #define ONE TG(LAYER_ONE)     // qwerty spanish
-#define TWO MO(LAYER_TWO)     // dvorak english
+#define TWO TG(LAYER_TWO)     // dvorak english
 #define THREE MO(LAYER_THREE) // symbols and numpad
 #define FOUR MO(LAYER_FOUR)   // media and zoom
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
 #define PT_SCLN LT(LAYER_POINTER, KC_SCLN)
-#define NUM_SPC LT(LAYER_THREE, KC_SPC)
+#define NUM_SPC LT(LAYER_FOUR, KC_SPC)
 
 // home row mods qwerty
 #define HR_LSFT MT(MOD_LSFT, KC_A)
