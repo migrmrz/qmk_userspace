@@ -78,7 +78,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
 // layers definition
-#define BASE TG(LAYER_BASE)   // qwerty english
+#define BASE TO(LAYER_BASE)   // qwerty english
 #define ONE TG(LAYER_ONE)     // qwerty spanish
 #define TWO TG(LAYER_TWO)     // dvorak english
 #define THREE MO(LAYER_THREE) // symbols and numpad
