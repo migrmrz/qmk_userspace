@@ -21,6 +21,7 @@ enum charybdis_keymap_layers {
     LAYER_ONE,
     LAYER_TWO,
     LAYER_THREE,
+    LAYER_FOUR,
     LAYER_POINTER,
 };
 
@@ -76,18 +77,17 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-// custom drag-scroll defines
-#define CHARYBDIS_DRAGSCROLL_REVERSE_Y // inverts vertical scrolling
-
 // layers definition
-#define BASE TG(LAYER_BASE)
-#define ONE TG(LAYER_ONE)
-#define TWO MO(LAYER_TWO)
-#define THREE MO(LAYER_THREE)
+#define BASE TG(LAYER_BASE)   // qwerty english
+#define ONE TG(LAYER_ONE)     // qwerty spanish
+#define TWO MO(LAYER_TWO)     // dvorak english
+#define THREE MO(LAYER_THREE) // symbols and numpad
+#define FOUR MO(LAYER_FOUR)   // media and zoom
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
 #define NUM_SPC LT(LAYER_THREE, KC_SPC)
-// home row mods
+
+// home row mods qwerty
 #define HR_LSFT MT(MOD_LSFT, KC_A)
 #define HR_RSFT MT(MOD_RSFT, KC_SCLN)
 #define HR_LCTL MT(MOD_LCTL, KC_S)
@@ -96,6 +96,16 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define HR_RALT MT(MOD_RALT, KC_K)
 #define HR_LGUI MT(MOD_LGUI, KC_F)
 #define HR_RGUI MT(MOD_RGUI, KC_J)
+
+// home row mods dvorak
+#define HD_LSFT MT(MOD_LSFT, KC_A)
+#define HD_RSFT MT(MOD_RSFT, KC_S)
+#define HD_LCTL MT(MOD_LCTL, KC_O)
+#define HD_RCTL MT(MOD_RCTL, KC_N)
+#define HD_LALT MT(MOD_LALT, KC_E)
+#define HD_RALT MT(MOD_RALT, KC_T)
+#define HD_LGUI MT(MOD_LGUI, KC_U)
+#define HD_RGUI MT(MOD_RGUI, KC_H)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -107,7 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_EQL,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH,  KC_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                     TWO, KC_BSPC,     ONE,     KC_ENT, NUM_SPC
+                                   THREE, KC_BSPC,     ONE,     KC_ENT, NUM_SPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -119,11 +129,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  _______, _______, _______,    _______, _______
+                                  _______, _______,     TWO,    _______, _______
+  //                            ╰───────────────────────────╯ ╰──────────────────╯
+
+  [LAYER_TWO] = LAYOUT(
+  // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
+       _______, KC_QUOT, KC_COMM,  KC_DOT,    KC_P,    KC_Y,       KC_F,    KC_G,    KC_C,    KC_R,    KC_L, PT_BSLS,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       _______, HD_LSFT, HD_LCTL, HD_LALT, HD_LGUI,    KC_I,       KC_D, HD_RGUI, HD_RALT, HD_RCTL, HD_RSFT,  KC_EQL,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_MINS, KC_SCLN,    KC_Q,    KC_J,    KC_K,    KC_X,       KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, PT_SLSH, ,
+  // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
+                                  _______, _______,    BASE,    _______, _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_TWO] = LAYOUT(
+  [LAYER_THREE] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        LCK_SCR, S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),    KC_PMNS,   KC_P7,   KC_P8,   KC_P9, KC_PSLS, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -135,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_THREE] = LAYOUT(
+  [LAYER_FOUR] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        XXXXXXX, XXXXXXX, XXXXXXX,   KC_F5, XXXXXXX, XXXXXXX,    XXXXXXX, KC_VOLD,   KC_UP, KC_VOLU, KC_MPLY, KC_MUTE,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -149,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_POINTER] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       QK_BOOT,  EE_CLR, XXXXXXX, XXXXXXX, DPI_MOD, S_D_MOD,    S_D_MOD, DPI_MOD, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT,
+       QK_BOOT,  EE_CLR, XXXXXXX, XXXXXXX,DPI_RMOD,S_D_RMOD,    S_D_MOD, DPI_MOD, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX,    XXXXXXX, KC_RGUI, KC_RALT, KC_RCTL, KC_RSFT, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
