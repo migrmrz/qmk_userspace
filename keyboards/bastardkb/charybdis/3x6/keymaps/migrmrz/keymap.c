@@ -85,6 +85,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define FOUR MO(LAYER_FOUR)   // media and zoom
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
+#define PT_SCLN LT(LAYER_POINTER, KC_SCLN)
 #define NUM_SPC LT(LAYER_THREE, KC_SPC)
 
 // home row mods qwerty
@@ -135,11 +136,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_TWO] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       _______, KC_QUOT, KC_COMM,  KC_DOT,    KC_P,    KC_Y,       KC_F,    KC_G,    KC_C,    KC_R,    KC_L, PT_BSLS,
+       _______, KC_QUOT, KC_COMM,  KC_DOT,    KC_P,    KC_Y,       KC_F,    KC_G,    KC_C,    KC_R,    KC_L, KC_BSLS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______, HD_LSFT, HD_LCTL, HD_LALT, HD_LGUI,    KC_I,       KC_D, HD_RGUI, HD_RALT, HD_RCTL, HD_RSFT,  KC_EQL,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MINS, KC_SCLN,    KC_Q,    KC_J,    KC_K,    KC_X,       KC_B,    KC_M,    KC_W,    KC_V,    KC_Z, PT_SLSH,
+       KC_MINS, PT_SCLN,    KC_Q,    KC_J,    KC_K,    KC_X,       KC_B,    KC_M,    KC_W,    KC_V,    PT_Z, KC_SLSH,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                   _______, _______,    BASE,    _______, _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
