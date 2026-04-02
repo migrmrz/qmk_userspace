@@ -48,7 +48,8 @@ enum custom_keycodes {
 };
 
 static uint16_t es_ntil_timer;
-static bool es_ntil_held = false;
+static bool es_ntil_pressed = false;
+static bool es_ntil_shifted = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     const uint8_t mods = get_mods();
@@ -58,12 +59,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case ES_L1_NTIL:
             if (record->event.pressed) {
                 es_ntil_timer = timer_read();
-                es_ntil_held = false;
+                es_ntil_pressed = true;
+                es_ntil_shifted = false;
             } else {
-                if (!es_ntil_held && timer_elapsed(es_ntil_timer) < TAPPING_TERM) {
+                if (!es_ntil_shifted && timer_elapsed(es_ntil_timer) < TAPPING_TERM) {
                     SEND_STRING(SS_LALT("n") "n");
                 }
-                unregister_mods(MOD_BIT(KC_RSFT));
+                if (es_ntil_shifted) {
+                    unregister_mods(MOD_BIT(KC_RSFT));
+                }
+                es_ntil_pressed = false;
+                es_ntil_shifted = false;
             }
             return false;
 
@@ -194,13 +200,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
 
-    if (keycode == ES_L1_NTIL && !record->event.pressed) {
-        return false;
-    }
-
-    if (record->event.pressed && keycode != ES_L1_NTIL) {
-        if (es_ntil_held == false && timer_elapsed(es_ntil_timer) >= TAPPING_TERM) {
-            es_ntil_held = true;
+    if (record->event.pressed && keycode != ES_L1_NTIL && es_ntil_pressed) {
+        if (!es_ntil_shifted && timer_elapsed(es_ntil_timer) >= TAPPING_TERM) {
+            es_ntil_shifted = true;
             register_mods(MOD_BIT(KC_RSFT));
         }
     }
