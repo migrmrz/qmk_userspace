@@ -42,7 +42,9 @@ enum custom_keycodes {
     ES_L1_QUOT, // ' / ? when shifted
     ES_L1_GRV,  // + / * when shifted
     ES_L1_EQL,  // < / > when shifted
-    ES_L1_NTIL, // ñ (tap) / Shift (hold)
+    ES_L1_NTIL, // ñ (tap) / Shift (hold) - no uppercase Ñ
+    ES_L1_COMM, // , / ; when shifted
+    ES_L1_DOT,  // . / : when shifted
 };
 
 static uint16_t es_ntil_timer;
@@ -59,13 +61,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 es_ntil_held = false;
             } else {
                 if (!es_ntil_held && timer_elapsed(es_ntil_timer) < TAPPING_TERM) {
-                    if (shifted) {
-                        del_mods(MOD_MASK_SHIFT);
-                        SEND_STRING(SS_LALT("n") "N");
-                        set_mods(mods);
-                    } else {
-                        SEND_STRING(SS_LALT("n") "n");
-                    }
+                    SEND_STRING(SS_LALT("n") "n");
                 }
                 unregister_mods(MOD_BIT(KC_RSFT));
             }
@@ -115,6 +111,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     set_mods(mods);
                 } else {
                     SEND_STRING("<");
+                }
+            }
+            return false;
+
+        case ES_L1_COMM:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(";");
+                    set_mods(mods);
+                } else {
+                    SEND_STRING(",");
+                }
+            }
+            return false;
+
+        case ES_L1_DOT:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(":");
+                    set_mods(mods);
+                } else {
+                    SEND_STRING(".");
                 }
             }
             return false;
@@ -255,7 +275,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, ES_L1_NTIL, ES_L1_QUOT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       ES_L1_EQL, _______, _______, _______, _______, _______,    _______, _______, _______, _______, PT_MINS, ES_L1_GRV,
+       ES_L1_EQL, _______, _______, _______, _______, _______,    _______, _______, ES_L1_COMM, ES_L1_DOT, PT_MINS, ES_L1_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                   _______, _______,     TWO,    _______, _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
