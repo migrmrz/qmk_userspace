@@ -32,35 +32,161 @@ enum custom_keycodes {
     ZOOMIN,
     ZOOMOUT,
     ZOOMRST,
+    // Spanish layer keycodes (macOS English input)
+    ES_ACUT,    // Alt+E (acute accent dead key ´)
+    ES_DIAE,    // Alt+U (diaeresis dead key ¨)
+    ES_NTIL,    // Alt+N then N (ñ)
+    ES_NTIL_S,  // Alt+N then Shift+N (Ñ)
+    // Layer 1 keys with shift-dependent behavior
+    ES_L1_MINS, // ´ (Alt+E) / ¨ (Alt+U) when shifted
+    ES_L1_QUOT, // ' / ? when shifted
+    ES_L1_GRV,  // + / * when shifted
+    ES_L1_EQL,  // < / > when shifted
+    ES_L1_NTIL, // ñ (tap) / Shift (hold)
 };
 
+static uint16_t es_ntil_timer;
+static bool es_ntil_held = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        switch (keycode) {
-            case SCRNSHT:
+    const uint8_t mods = get_mods();
+    const bool shifted = mods & MOD_MASK_SHIFT;
+
+    switch (keycode) {
+        case ES_L1_NTIL:
+            if (record->event.pressed) {
+                es_ntil_timer = timer_read();
+                es_ntil_held = false;
+            } else {
+                if (!es_ntil_held && timer_elapsed(es_ntil_timer) < TAPPING_TERM) {
+                    if (shifted) {
+                        del_mods(MOD_MASK_SHIFT);
+                        SEND_STRING(SS_LALT("n") "N");
+                        set_mods(mods);
+                    } else {
+                        SEND_STRING(SS_LALT("n") "n");
+                    }
+                }
+                unregister_mods(MOD_BIT(KC_RSFT));
+            }
+            return false;
+
+        case ES_L1_MINS:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(SS_LALT("u"));
+                    set_mods(mods);
+                } else {
+                    SEND_STRING(SS_LALT("e"));
+                }
+            }
+            return false;
+
+        case ES_L1_QUOT:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("?");
+                    set_mods(mods);
+                } else {
+                    SEND_STRING("'");
+                }
+            }
+            return false;
+
+        case ES_L1_GRV:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("*");
+                    set_mods(mods);
+                } else {
+                    SEND_STRING("+");
+                }
+            }
+            return false;
+
+        case ES_L1_EQL:
+            if (record->event.pressed) {
+                if (shifted) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(">");
+                    set_mods(mods);
+                } else {
+                    SEND_STRING("<");
+                }
+            }
+            return false;
+
+        case ES_ACUT:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT("e"));
+            }
+            return false;
+
+        case ES_DIAE:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT("u"));
+            }
+            return false;
+
+        case ES_NTIL:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT("n") "n");
+            }
+            return false;
+
+        case ES_NTIL_S:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT("n") "N");
+            }
+            return false;
+
+        case SCRNSHT:
+            if (record->event.pressed) {
                 SEND_STRING(SS_LGUI(SS_LSFT(SS_LCTL("4"))));
-                return false;
-                break;
-            case LCK_SCR:
+            }
+            return false;
+
+        case LCK_SCR:
+            if (record->event.pressed) {
                 SEND_STRING(SS_LGUI(SS_LCTL("q")));
-                return false;
-                break;
-            case ZOOMIN:
+            }
+            return false;
+
+        case ZOOMIN:
+            if (record->event.pressed) {
                 SEND_STRING(SS_LGUI(SS_LSFT("=")));
-                return false;
-                break;
-            case ZOOMOUT:
+            }
+            return false;
+
+        case ZOOMOUT:
+            if (record->event.pressed) {
                 SEND_STRING(SS_LGUI("-"));
-                return false;
-                break;
-            case ZOOMRST:
+            }
+            return false;
+
+        case ZOOMRST:
+            if (record->event.pressed) {
                 SEND_STRING(SS_LGUI("0"));
-                return false;
-                break;
+            }
+            return false;
+    }
+
+    if (keycode == ES_L1_NTIL && !record->event.pressed) {
+        return false;
+    }
+
+    if (record->event.pressed && keycode != ES_L1_NTIL) {
+        if (es_ntil_held == false && timer_elapsed(es_ntil_timer) >= TAPPING_TERM) {
+            es_ntil_held = true;
+            register_mods(MOD_BIT(KC_RSFT));
         }
     }
+
     return true;
-};
+}
 
 /** \brief Automatically enable sniping-mode on the pointer layer. */
 #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -86,6 +212,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
 #define PT_SCLN LT(LAYER_POINTER, KC_SCLN)
+#define PT_MINS LT(LAYER_POINTER, KC_MINS)
 #define NUM_SPC LT(LAYER_FOUR, KC_SPC)
 
 // home row mods qwerty
@@ -124,11 +251,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_ONE] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_LBRC,
+       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, ES_L1_MINS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_MINS,
+       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, ES_L1_NTIL, ES_L1_QUOT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______,
+       ES_L1_EQL, _______, _______, _______, _______, _______,    _______, _______, _______, _______, PT_MINS, ES_L1_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                   _______, _______,     TWO,    _______, _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
